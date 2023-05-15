@@ -11,7 +11,7 @@ interface Credential {
 export async function postUser(data: Credential): Promise<any> {
     const response = await axios.post<ServiceResponse>("/api/register", data);
     if (response.data) {
-        const { status, message, data, errors } = response.data;
-        console.log(status, message);
+        const { ok, message, data, errors } = response.data;
+        console.log(ok, message);
     }
 }
