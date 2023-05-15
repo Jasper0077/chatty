@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Provider from "./Provider";
+import ToasterContext from "./context/ToasterContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,10 @@ export default function RootLayout({
             <body>
                 {
                     /* @ts-expect-error Server Component */
-                    <Provider>{children}</Provider>
+                    <Provider>
+                        <ToasterContext />
+                        {children}
+                    </Provider>
                 }
             </body>
         </html>
