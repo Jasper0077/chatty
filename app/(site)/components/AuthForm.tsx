@@ -1,22 +1,29 @@
 "use client";
 
-import React from "react";
-import { upperCase } from "lodash";
+import { useMutation } from "react-query";
 import cn from "classnames";
+import { upperCase } from "lodash";
+import React from "react";
 import {
     FieldValue,
     FieldValues,
     RegisterOptions,
     SubmitHandler,
-    UseFormRegisterReturn,
-    useForm
+    useForm,
+    UseFormRegisterReturn
 } from "react-hook-form";
 import { BsGithub, BsGoogle } from "react-icons/bs";
-import Input from "@/app/components/Input";
+
 import Button from "@/app/components/Button";
+import Input from "@/app/components/Input";
+
 import AuthSocialButton from "./AuthSocialButton";
+import axios from "axios";
 
 const AuthForm = () => {
+    const registerUser = useMutation({
+        mutationFn: (data: FieldValues) => axios.post(`/api/register`, data)
+    });
     const [variant, setVariant] = React.useState<"login" | "register">(
         "register"
     );
@@ -42,11 +49,15 @@ const AuthForm = () => {
         }
     });
 
-    const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const onSubmit: SubmitHandler<FieldValues> = async (data, event) => {
         setIsLoading(true);
 
         if (variant === "register") {
-            // React Query Register
+            event?.preventDefault();
+            const response = await registerUser.mutateAsync(data);
+            if (response.data) {
+                console.log(response.data);
+            }
         }
 
         if (variant === "login") {
