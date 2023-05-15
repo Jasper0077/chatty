@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 
 import prisma from "@/app/libs/prismadb";
 import { NextResponse } from "next/server";
+import { ServiceResponse } from "@/app/models";
 
 export async function POST(request: Request) {
     try {
@@ -21,7 +22,15 @@ export async function POST(request: Request) {
         });
 
         if (existingUser) {
-            return new NextResponse("User exists", { status: 400 });
+            return NextResponse.json(
+                <ServiceResponse>{
+                    ok: false,
+                    message: "User exists",
+                    data: null,
+                    errors: null
+                },
+                { status: 400 }
+            );
         }
 
         const user = await prisma.user.create({
@@ -32,12 +41,15 @@ export async function POST(request: Request) {
             }
         });
 
-        return NextResponse.json({
-            status: 201,
-            message: "User created",
-            data: user,
-            errors: null
-        });
+        return NextResponse.json(
+            <ServiceResponse>{
+                ok: true,
+                message: "User created",
+                data: user,
+                errors: null
+            },
+            { status: 201 }
+        );
     } catch (error: any) {
         console.error(error);
     }
