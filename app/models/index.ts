@@ -1,5 +1,5 @@
 export interface ServiceResponse {
-    status: number;
+    ok: boolean;
     message: string;
     data: any;
     errors: string | null;
