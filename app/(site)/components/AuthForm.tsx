@@ -18,16 +18,22 @@ import Button from "@/app/components/Button";
 import Input from "@/app/components/Input";
 
 import AuthSocialButton from "./AuthSocialButton";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { ServiceResponse } from "@/app/models";
+import { toast } from "react-hot-toast";
 
 const AuthForm = () => {
-    const registerUser = useMutation({
-        mutationFn: (data: FieldValues) => axios.post(`/api/register`, data)
+    const { data, error, isError, isLoading, isSuccess, mutate } = useMutation<
+        AxiosResponse<ServiceResponse>,
+        AxiosError<ServiceResponse>,
+        FieldValues
+    >({
+        mutationFn: (data: FieldValues) =>
+            axios.post<ServiceResponse>(`/api/register`, data)
     });
     const [variant, setVariant] = React.useState<"login" | "register">(
         "register"
     );
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     const toggleVariant = React.useCallback(() => {
         if (variant === "login") {
@@ -50,13 +56,16 @@ const AuthForm = () => {
     });
 
     const onSubmit: SubmitHandler<FieldValues> = async (data, event) => {
-        setIsLoading(true);
-
         if (variant === "register") {
             event?.preventDefault();
-            const response = await registerUser.mutateAsync(data);
-            if (response.data) {
-                console.log(response.data);
+            mutate(data);
+            if (isError && error.response?.data.message) {
+                toast.error(error.response?.data.message);
+                return;
+            }
+            if (isSuccess) {
+                toast.success(data.message);
+                return;
             }
         }
 
@@ -66,10 +75,14 @@ const AuthForm = () => {
     };
 
     const socialAction = (action: string) => {
-        setIsLoading(true);
-
         // Social login
     };
+
+    React.useEffect(() => {
+        console.log("error", error);
+        console.log("is error", isError);
+    }, [error, isError]);
+
     return (
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
@@ -98,7 +111,12 @@ const AuthForm = () => {
                         errors={errors}
                     />
                     <div className="">
-                        <Button type="submit" center={true} fullWidth>
+                        <Button
+                            type="submit"
+                            center={true}
+                            fullWidth
+                            disabled={isLoading}
+                        >
                             {variant === "register" ? "Sign In" : "Login"}
                         </Button>
                     </div>
