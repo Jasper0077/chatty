@@ -21,8 +21,12 @@ import AuthSocialButton from "./AuthSocialButton";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { ServiceResponse } from "@/app/models";
 import { toast } from "react-hot-toast";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const AuthForm = () => {
+    const session = useSession();
+    const router = useRouter();
     const { data, error, isError, isLoading, isSuccess, mutate } = useMutation<
         AxiosResponse<ServiceResponse>,
         AxiosError<ServiceResponse>,
@@ -34,6 +38,13 @@ const AuthForm = () => {
     const [variant, setVariant] = React.useState<"login" | "register">(
         "register"
     );
+    const [loading, setLoading] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        if (session?.status === "authenticated") {
+            router.push("/users");
+        }
+    }, [session?.status, router]);
 
     const toggleVariant = React.useCallback(() => {
         if (variant === "login") {
@@ -65,23 +76,48 @@ const AuthForm = () => {
             }
             if (isSuccess) {
                 toast.success(data.message);
-                return;
+                signIn("credentials", data);
+                router.push("/users");
             }
         }
 
         if (variant === "login") {
-            // NextAuth Sign In
+            signIn("credentials", {
+                ...data,
+                redirect: false
+            })
+                .then((callback) => {
+                    console.log("callback", callback);
+                    if (callback?.error) {
+                        toast.error("Invalid credentials");
+                        return;
+                    }
+                    if (callback?.ok) {
+                        toast.success("Logged in!");
+                    }
+                })
+                .finally(() => {
+                    // set loading to false
+                });
         }
     };
 
     const socialAction = (action: string) => {
-        // Social login
-    };
+        setLoading(true);
 
-    React.useEffect(() => {
-        console.log("error", error);
-        console.log("is error", isError);
-    }, [error, isError]);
+        signIn(action, { redirect: false })
+            .then((callback) => {
+                console.log("callback", callback);
+                if (callback?.error) {
+                    toast.error("Invalid credentials");
+                }
+
+                if (callback?.ok && !callback?.error) {
+                    toast.success("Logged in");
+                }
+            })
+            .finally(() => setLoading(false));
+    };
 
     return (
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
