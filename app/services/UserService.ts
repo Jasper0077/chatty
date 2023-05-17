@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import axios, { AxiosResponse } from "axios";
-import { ServiceResponse } from "../models";
+import { ServiceResponse } from "@/app/models";
 
 interface Credential {
     email: string;
