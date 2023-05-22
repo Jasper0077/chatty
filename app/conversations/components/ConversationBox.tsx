@@ -8,6 +8,8 @@ import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import cn from "classnames";
 import useOtherUser from "@/app/hooks/useOtherUser";
+import { last } from "lodash";
+import Avatar from "@/app/components/Avatar";
 
 interface Props {
     conversation: FullConversation;
@@ -35,7 +37,35 @@ const ConversationBox: React.FC<Props> = ({
         return session?.data?.user?.email;
     }, [session?.data?.user?.email]);
 
-    return <div>Conversation Box</div>;
+    const hasSeen = React.useMemo(() => {
+        if (!lastMessage || !userEmail) {
+            return false;
+        }
+        const seenArray = lastMessage.seen || [];
+        return !!seenArray.find((user) => user.email === userEmail);
+    }, [lastMessage, userEmail]);
+
+    const lastMessageText = React.useMemo<string>(() => {
+        if (lastMessage?.image) {
+            return "Sent an image";
+        }
+        if (lastMessage?.body) {
+            return lastMessage.body;
+        }
+        return "Started a conversation";
+    }, [lastMessage]);
+
+    return (
+        <div
+            onClick={handleClick}
+            className={cn(
+                "w-full relative flex items-center space-x-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer",
+                selected ? "bg-neutral-100" : "bg-white"
+            )}
+        >
+            <Avatar user={otherUser} />
+        </div>
+    );
 };
 
 export default ConversationBox;
