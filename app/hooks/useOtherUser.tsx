@@ -12,15 +12,15 @@ const useOtherUser = (
 ) => {
     const session = useSession();
 
-    const otherUser = React.useMemo(() => {
+    const otherUsers = React.useMemo(() => {
         const currentUserEmail = session?.data?.user?.email;
-        const otherUser = conversation.users.filter(
+        const otherUsrs = conversation.users.filter(
             (user) => user.email !== currentUserEmail
         );
-        return otherUser;
+        return otherUsrs;
     }, [session?.data?.user?.email, conversation.users]);
 
-    return otherUser;
+    return otherUsers[0];
 };
 
 export default useOtherUser;
