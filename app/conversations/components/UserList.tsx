@@ -7,13 +7,13 @@ import cn from "classnames";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { MdOutlineGroupAdd } from "react-icons/md";
-import ConversationBox from "./ConversationBox";
+import UserBox from "./UserBox";
 
 interface Props {
     initialConversations: Array<FullConversation>;
 }
 
-const ConversationList: React.FC<Props> = ({ initialConversations }) => {
+const UserList: React.FC<Props> = ({ initialConversations }) => {
     const [conversations, setConversations] =
         React.useState<Array<FullConversation>>(initialConversations);
     const { conversationId, isOpen } = useConversation();
@@ -34,16 +34,18 @@ const ConversationList: React.FC<Props> = ({ initialConversations }) => {
                         <MdOutlineGroupAdd size={20} />
                     </div>
                 </div>
-                {conversations.map((conversation) => (
-                    <ConversationBox
-                        key={conversation.id}
-                        conversation={conversation}
-                        selected={conversationId === conversation.id}
-                    />
-                ))}
+                {conversations.map((conversation) => {
+                    return (
+                        <UserBox
+                            key={conversation.id}
+                            conversation={conversation}
+                            selected={conversationId === conversation.id}
+                        />
+                    );
+                })}
             </div>
         </aside>
     );
 };
 
-export default ConversationList;
+export default UserList;

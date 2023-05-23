@@ -16,10 +16,7 @@ interface Props {
     selected?: boolean;
 }
 
-const ConversationBox: React.FC<Props> = ({
-    conversation,
-    selected = false
-}) => {
+const UserBox = ({ conversation, selected = false }: Props) => {
     const otherUser = useOtherUser(conversation);
     const session = useSession();
     const router = useRouter();
@@ -54,7 +51,6 @@ const ConversationBox: React.FC<Props> = ({
         }
         return "Started a conversation";
     }, [lastMessage]);
-
     return (
         <div
             onClick={handleClick}
@@ -76,18 +72,22 @@ const ConversationBox: React.FC<Props> = ({
                             </p>
                         )}
                     </div>
-                    <div
-                        className={cn(
-                            "truncate text-sm",
-                            hasSeen ? "text-gray-500" : "text-black font-medium"
-                        )}
-                    >
-                        {lastMessageText}
-                    </div>
+                    {true && (
+                        <p
+                            className={cn(
+                                "truncate text-sm",
+                                hasSeen
+                                    ? "text-gray-500"
+                                    : "text-black font-medium"
+                            )}
+                        >
+                            {lastMessageText}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>
     );
 };
 
-export default ConversationBox;
+export default UserBox;
