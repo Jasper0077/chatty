@@ -71,17 +71,19 @@ const ConversationBox: React.FC<Props> = ({
                             {conversation.name || otherUser.name}
                         </p>
                         {lastMessage?.createdAt && (
-                            <p>{format(new Date(), "p")}</p>
+                            <p>
+                                {format(new Date(lastMessage.createdAt), "p")}
+                            </p>
                         )}
                     </div>
-                    <p
+                    <div
                         className={cn(
                             "truncate text-sm",
                             hasSeen ? "text-gray-500" : "text-black font-medium"
                         )}
                     >
                         {lastMessageText}
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
