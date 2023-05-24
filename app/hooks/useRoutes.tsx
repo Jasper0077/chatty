@@ -32,7 +32,7 @@ const useRoutes = () => {
                 href: "#",
                 Icon: HiArrowLeftOnRectangle,
                 onClick: () => signOut(),
-                active: pathname === "/conversations" || !!conversationId
+                active: pathname === "/logout"
             }
         ],
         [pathname, conversationId]
