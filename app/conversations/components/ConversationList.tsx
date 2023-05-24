@@ -1,44 +1,44 @@
 "use client";
 
-import useConversation from "@/app/hooks/useConversation";
-import { FullConversation } from "@/app/models";
-import { Conversation } from "@prisma/client";
-import cn from "classnames";
-import { useRouter } from "next/navigation";
 import React from "react";
+import { FullConversation } from "@/app/models";
+import { useRouter } from "next/navigation";
+import useConversation from "@/app/hooks/useConversation";
+import cn from "classnames";
 import { MdOutlineGroupAdd } from "react-icons/md";
-import UserBox from "./UserBox";
+import ConversationBox from "./ConversationBox";
 
 interface Props {
     initialConversations: Array<FullConversation>;
 }
 
-const UserList: React.FC<Props> = ({ initialConversations }) => {
+const ConversationList: React.FC<Props> = ({ initialConversations }) => {
     const [conversations, setConversations] =
         React.useState<Array<FullConversation>>(initialConversations);
-    const { conversationId, isOpen } = useConversation();
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const router = useRouter();
+    const { conversationId, isOpen } = useConversation();
     return (
         <aside
             className={cn(
-                `fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200`,
+                "fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200",
                 isOpen ? "hidden" : "block w-full left-0"
             )}
         >
             <div className="px-5">
                 <div className="flex justify-between mb-4 pt-4">
-                    <div className="text-2xl font-bold text-neutral-100">
-                        Message
+                    <div className="text-2xl font-bold text-neutral-800">
+                        Messages
                     </div>
-                    <div className="rounded-full p-2 bg-gray-200 text-gray-600 cursor-pointer hover:opcaity-75 transition">
+                    <div className="rounded-full p-2 bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition">
                         <MdOutlineGroupAdd size={20} />
                     </div>
                 </div>
                 {conversations.map((conversation) => {
                     return (
-                        <UserBox
+                        <ConversationBox
                             key={conversation.id}
-                            conversation={conversation}
+                            data={conversation}
                             selected={conversationId === conversation.id}
                         />
                     );
@@ -48,4 +48,4 @@ const UserList: React.FC<Props> = ({ initialConversations }) => {
     );
 };
 
-export default UserList;
+export default ConversationList;
