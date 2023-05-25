@@ -72,18 +72,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         <div
             onClick={handleClick}
             className={cn(
-                `
-        w-full 
-        relative 
-        flex 
-        items-center 
-        space-x-3 
-        p-3 
-        hover:bg-neutral-100
-        rounded-lg
-        transition
-        cursor-pointer
-        `,
+                `w-full relative flex items-center space-x-3 p-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer`,
                 selected ? "bg-neutral-100" : "bg-white"
             )}
         >
@@ -100,13 +89,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
                             {data.name || otherUser.name}
                         </p>
                         {lastMessage?.createdAt && (
-                            <p
-                                className="
-                  text-xs 
-                  text-gray-400 
-                  font-light
-                "
-                            >
+                            <p className="text-xs text-gray-400 font-light">
                                 {format(new Date(lastMessage.createdAt), "p")}
                             </p>
                         )}
