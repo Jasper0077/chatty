@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "@/app/components/sidebar/Sidebar";
-import UserList from "./components/ConversationList";
+import ConversationList from "./components/ConversationList";
 import getConversations from "@/app/actions/getConversations";
 
 export default async function ConversationsLayout({
@@ -13,7 +13,7 @@ export default async function ConversationsLayout({
         // @ts-expect-error Server Component
         <Sidebar>
             <div className="h-full">
-                <UserList initialConversations={conversations} />
+                <ConversationList initialConversations={conversations} />
                 {children}
             </div>
         </Sidebar>

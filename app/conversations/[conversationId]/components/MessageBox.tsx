@@ -37,6 +37,14 @@ const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
                 <Avatar user={data.sender} />
             </div>
             <div className={body}>
+                <div className="flex flex-row gap-1 items-center">
+                    <div className="text-sm text-gray-500">
+                        {data.sender.name}
+                    </div>
+                    <div className="text-[8px] text-gray-400">
+                        {format(new Date(data.createdAt), "p")}
+                    </div>
+                </div>
                 <div className="flex items-center gap-1">
                     <div className={message}>
                         {data.image ? (
@@ -59,16 +67,9 @@ const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
                             </>
                         )}
                     </div>
-                </div>
-                <div className="relative right-[-40px]">
-                    <div className="flex flex-row gap-1 items-center">
-                        <div className="text-sm text-gray-500">
-                            {data.sender.name}
-                        </div>
-                        <div className="text-[8px] text-gray-400">
-                            {format(new Date(data.createdAt), "p")}
-                        </div>
-                    </div>
+                    {isLast && isOwn && seenUsernames.length > 0 && (
+                        <div className="text-xs font-light text-gray-500">{`Seen by ${seenUsernames}`}</div>
+                    )}
                 </div>
             </div>
         </div>
