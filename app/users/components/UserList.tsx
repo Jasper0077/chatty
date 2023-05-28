@@ -14,10 +14,10 @@ const UserList: React.FC<Props> = ({ users }) => {
                         People
                     </div>
                 </div>
+                {users.map((user) => {
+                    return <UserBox key={user.id} user={user} />;
+                })}
             </div>
-            {users.map((user) => {
-                return <UserBox key={user.id} user={user} />;
-            })}
         </aside>
     );
 };
