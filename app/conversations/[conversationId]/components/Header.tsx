@@ -27,7 +27,7 @@ const Header: React.FC<Props> = ({ conversation }) => {
         <>
             <ProfileDrawer
                 conversation={conversation}
-                onClose={() => {}}
+                onClose={() => setDrawerOpen(false)}
                 isOpen={drawerOpen}
             />
             <div className="bg-white w-full border-b-[1px] sm:px-4 py-3 px-4 lg:px-6 flex justify-between items-center shadow-sm">
