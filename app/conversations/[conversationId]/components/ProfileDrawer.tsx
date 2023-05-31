@@ -8,6 +8,7 @@ import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 import React from "react";
 import { IoClose, IoTrash } from "react-icons/io5";
+import ConfirmModal from "./ConfirmModal";
 
 interface Props {
     isOpen: boolean;
@@ -34,9 +35,10 @@ const ProfileDrawer: React.FC<Props> = ({ isOpen, onClose, conversation }) => {
     }, []);
     return (
         <>
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <div>Hello Modal</div>
-            </Modal>
+            <ConfirmModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
             <Transition.Root show={isOpen} as={React.Fragment}>
                 <Dialog as="div" className="relative z-50" onClose={onClose}>
                     <Transition.Child
