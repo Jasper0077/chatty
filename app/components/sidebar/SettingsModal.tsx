@@ -7,7 +7,7 @@ import React from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import Modal from "../modals/Modal";
-import Input from "../Input";
+import Input from "../inputs/Input";
 import Image from "next/image";
 import { CldUploadButton } from "next-cloudinary";
 import Button from "../Button";
