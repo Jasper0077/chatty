@@ -4,7 +4,7 @@ import cn from "classnames";
 interface InputProps {
     label: string;
     id: string;
-    type: string;
+    type?: string;
     required?: boolean;
     register: UseFormRegister<FieldValues>;
     errors: FieldErrors;
@@ -14,7 +14,7 @@ interface InputProps {
 const Input: React.FC<InputProps> = ({
     label,
     id,
-    type,
+    type = "text",
     required,
     register,
     errors,
