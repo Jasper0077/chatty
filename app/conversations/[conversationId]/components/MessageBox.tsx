@@ -7,6 +7,7 @@ import cn from "classnames";
 import Avatar from "@/app/components/Avatar";
 import { format } from "date-fns";
 import Image from "next/image";
+import ImageModal from "./ImageModal";
 
 interface Props {
     isLast?: boolean;
@@ -15,7 +16,7 @@ interface Props {
 
 const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
     const session = useSession();
-
+    const [imageModalOpen, setImageModalOpen] = React.useState<boolean>(false);
     const isOwn = session?.data?.user?.email === data.sender.email;
     const seenUsernames = (data.seen || [])
         .filter((user) => user.email !== data.sender.email)
@@ -47,6 +48,13 @@ const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
                 </div>
                 <div className="flex items-center gap-1">
                     <div className={message}>
+                        {data.image && (
+                            <ImageModal
+                                src={data.image}
+                                isOpen={imageModalOpen}
+                                onClose={() => setImageModalOpen(false)}
+                            />
+                        )}
                         {data.image ? (
                             <Image
                                 alt="Image"
@@ -54,6 +62,7 @@ const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
                                 width="288"
                                 src={data.image}
                                 className="object-cover cursor-pointer hover:scale-110 transition translate"
+                                onClick={() => setImageModalOpen(true)}
                             />
                         ) : (
                             <>
