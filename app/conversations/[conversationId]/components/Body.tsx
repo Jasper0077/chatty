@@ -4,6 +4,9 @@ import useConversation from "@/app/hooks/useConversation";
 import { FullMessage } from "@/app/models";
 import React from "react";
 import MessageBox from "./MessageBox";
+import axios from "axios";
+import { pusherClient } from "@/app/libs/pusher";
+import { cloneDeep, find } from "lodash";
 
 interface Props {
     initialMessages: Array<FullMessage>;
@@ -15,6 +18,32 @@ const Body: React.FC<Props> = ({ initialMessages }: Props) => {
     const bottomRef = React.useRef<HTMLDivElement>(null);
 
     const { conversationId } = useConversation();
+
+    React.useEffect(() => {
+        axios.post(`/api/conversations/${conversationId}/seen`, {});
+    }, [conversationId]);
+
+    React.useEffect(() => {
+        pusherClient.subscribe(conversationId);
+        bottomRef?.current?.scrollIntoView();
+
+        const messageHandler = (message: FullMessage) => {
+            axios.post(`/api/conversations/${conversationId}/seen`);
+            setMessages((current) => {
+                if (find(current, { id: message.id })) {
+                    return current;
+                }
+                return [...current, message];
+            });
+        };
+
+        pusherClient.bind("messages:new", messageHandler);
+
+        return () => {
+            pusherClient.unsubscribe(conversationId);
+            pusherClient.unbind("messages:new");
+        };
+    }, [conversationId]);
 
     return (
         <div className="flex-1 overflow-y-auto">
