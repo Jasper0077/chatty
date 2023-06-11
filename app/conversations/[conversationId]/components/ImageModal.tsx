@@ -12,11 +12,11 @@ interface Props {
 const ImageModal: React.FC<Props> = ({ isOpen, onClose, src }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
-            <div className="w-80 h-80">
+            <div className="flex items-center justify-center">
                 <Image
                     alt="Image"
-                    height="288"
-                    width="288"
+                    height="400"
+                    width="400"
                     src={src}
                     className="object-cover"
                 />
