@@ -37,7 +37,19 @@ const Body: React.FC<Props> = ({ initialMessages }: Props) => {
             });
         };
 
+        const updateMessageHandler = (newMessage: FullMessage) => {
+            setMessages((current) =>
+                current.map((currentMessage) => {
+                    if (currentMessage.id === newMessage.id) {
+                        return newMessage;
+                    }
+                    return currentMessage;
+                })
+            );
+        };
+
         pusherClient.bind("messages:new", messageHandler);
+        pusherClient.bind("message:update", updateMessageHandler);
 
         return () => {
             pusherClient.unsubscribe(conversationId);
