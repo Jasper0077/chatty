@@ -3,9 +3,10 @@
 import useConversation from "@/app/hooks/useConversation";
 import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
+import { HiPaperAirplane, HiPhoto, HiFaceSmile } from "react-icons/hi2";
 import MessageInput from "./MessageInput";
 import { CldUploadButton } from "next-cloudinary";
+import EmojiPicker from "./EmojiPicker";
 
 const Form = () => {
     const { conversationId } = useConversation();
@@ -13,6 +14,7 @@ const Form = () => {
         register,
         handleSubmit,
         setValue,
+        getValues,
         formState: { errors }
     } = useForm<FieldValues>({
         defaultValues: {
@@ -43,6 +45,10 @@ const Form = () => {
             >
                 <HiPhoto size={30} className="text-sky-500" />
             </CldUploadButton>
+            <EmojiPicker
+                setValue={setValue}
+                getValues={() => getValues("message")}
+            />
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex items-center gap-2 lg:gap-4 w-full"
