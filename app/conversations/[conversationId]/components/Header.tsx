@@ -4,17 +4,19 @@ import React from "react";
 import { Conversation, User } from "@prisma/client";
 import useOtherUser from "@/app/hooks/useOtherUser";
 import Link from "next/link";
-import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
+import { HiChevronLeft, HiEllipsisHorizontal, HiPhone } from "react-icons/hi2";
 import Avatar from "@/app/components/Avatar";
 import ProfileDrawer from "./ProfileDrawer";
 import useActiveList from "@/app/hooks/useActiveList";
+import VideoPlayer from "./VideoPlayer";
 
 interface Props {
     conversation: Conversation & {
         users: Array<User>;
     };
+    setVideoPlayer: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const Header: React.FC<Props> = ({ conversation }) => {
+const Header: React.FC<Props> = ({ conversation, setVideoPlayer }) => {
     const otherUser = useOtherUser(conversation);
     const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
@@ -44,6 +46,7 @@ const Header: React.FC<Props> = ({ conversation }) => {
                         <HiChevronLeft size={32} />
                     </Link>
                     <Avatar user={otherUser} />
+
                     <div className="flex flex-col">
                         <div>{conversation.name || otherUser.name}</div>
                         <div className="text-sm font-light text-neutral-500">
@@ -51,11 +54,19 @@ const Header: React.FC<Props> = ({ conversation }) => {
                         </div>
                     </div>
                 </div>
-                <HiEllipsisHorizontal
-                    size={32}
-                    onClick={() => setDrawerOpen(true)}
-                    className="text-sky-500 cursor-pointer hover:text-sky-600 transition"
-                />
+                <div className="flex flex-row items-center justify-end gap-3">
+                    <button
+                        className="text-sky-500 cursor-pointer"
+                        onClick={() => setVideoPlayer((current) => !current)}
+                    >
+                        <HiPhone size={32} />
+                    </button>
+                    <HiEllipsisHorizontal
+                        size={32}
+                        onClick={() => setDrawerOpen(true)}
+                        className="text-sky-500 cursor-pointer hover:text-sky-600 transition"
+                    />
+                </div>
             </div>
         </>
     );
