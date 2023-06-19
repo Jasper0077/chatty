@@ -18,6 +18,7 @@ interface Props {
 }
 const Header: React.FC<Props> = ({ conversation, setVideoPlayer }) => {
     const otherUser = useOtherUser(conversation);
+    const [isOpen, setIsOpen] = React.useState<boolean>(false);
     const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
     const { members } = useActiveList();
@@ -57,7 +58,7 @@ const Header: React.FC<Props> = ({ conversation, setVideoPlayer }) => {
                 <div className="flex flex-row items-center justify-end gap-3">
                     <button
                         className="text-sky-500 cursor-pointer"
-                        onClick={() => setVideoPlayer((current) => !current)}
+                        onClick={() => setIsOpen((current) => !current)}
                     >
                         <HiPhone size={32} />
                     </button>
@@ -68,6 +69,11 @@ const Header: React.FC<Props> = ({ conversation, setVideoPlayer }) => {
                     />
                 </div>
             </div>
+            <VideoPlayer
+                conversationId={conversation.id}
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+            />
         </>
     );
 };
