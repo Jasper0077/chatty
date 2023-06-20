@@ -69,11 +69,11 @@ const Header: React.FC<Props> = ({ conversation, setVideoPlayer }) => {
                     />
                 </div>
             </div>
-            <VideoPlayer
+            {/* <VideoPlayer
                 conversationId={conversation.id}
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
-            />
+            /> */}
         </>
     );
 };
