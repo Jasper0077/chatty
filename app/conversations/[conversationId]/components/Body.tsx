@@ -24,6 +24,7 @@ const Body: React.FC<Props> = ({ initialMessages }: Props) => {
     }, [conversationId]);
 
     React.useEffect(() => {
+        if (Array.isArray(conversationId)) return;
         pusherClient.subscribe(conversationId);
         bottomRef?.current?.scrollIntoView();
 
