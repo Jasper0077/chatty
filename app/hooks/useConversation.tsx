@@ -3,7 +3,7 @@ import React from "react";
 
 const useConversation = () => {
     const params = useParams();
-    const conversationId = React.useMemo<string>(() => {
+    const conversationId = React.useMemo<string | string[]>(() => {
         return params?.conversationId ? params?.conversationId : "";
     }, [params?.conversationId]);
     const isOpen = React.useMemo<boolean>(
