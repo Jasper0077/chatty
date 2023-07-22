@@ -6,7 +6,7 @@ import React from "react";
 import MessageBox from "./MessageBox";
 import axios from "axios";
 import { pusherClient } from "@/app/libs/pusher";
-import { cloneDeep, find } from "lodash";
+import { find } from "lodash";
 
 interface Props {
     initialMessages: Array<FullMessage>;
