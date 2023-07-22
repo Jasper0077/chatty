@@ -8,6 +8,8 @@ import Avatar from "@/app/components/Avatar";
 import { format } from "date-fns";
 import Image from "next/image";
 import ImageModal from "./ImageModal";
+import MapModal from "@/app/components/modals/MapModal";
+import Map, { GeolocateControl, Marker } from "react-map-gl";
 
 interface Props {
     isLast?: boolean;
@@ -17,6 +19,8 @@ interface Props {
 const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
     const session = useSession();
     const [imageModalOpen, setImageModalOpen] = React.useState<boolean>(false);
+    const [mapModalOpen, setMapModalOpen] = React.useState<boolean>(false);
+
     const isOwn = session?.data?.user?.email === data.sender.email;
     const seenUsernames = (data.seen || [])
         .filter((user) => user.email !== data.sender.email)
@@ -29,7 +33,8 @@ const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
     const message = cn(
         "text-sm w-fit overflow-hidden",
         isOwn ? "bg-sky-500 text-white" : "bg-gray-100",
-        data.image ? "rounded-md p-0" : "rounded-full py-2 px-3"
+        data.image && "rounded-md p-0",
+        data.geolocation ? "rounded-none p-0" : "rounded-full py-2 px-3"
     );
 
     return (
@@ -55,6 +60,19 @@ const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
                                 onClose={() => setImageModalOpen(false)}
                             />
                         )}
+                        {data.geolocation && (
+                            <MapModal
+                                isOpen={mapModalOpen}
+                                onClose={() => setMapModalOpen(false)}
+                                view={true}
+                                geolocation={
+                                    data.geolocation as {
+                                        latitude: number;
+                                        longitude: number;
+                                    }
+                                }
+                            />
+                        )}
                         {data.image ? (
                             <Image
                                 alt="Image"
@@ -64,6 +82,61 @@ const MessageBox: React.FC<Props> = ({ isLast, data }: Props) => {
                                 className="object-cover cursor-pointer hover:scale-110 transition translate"
                                 onClick={() => setImageModalOpen(true)}
                             />
+                        ) : data.geolocation ? (
+                            <div
+                                data-tooltip-target="tooltip-default"
+                                className="hover:bg-gray-600 hover:cursor-pointer bg-opacity-60 group"
+                                onClick={() => setMapModalOpen(true)}
+                            >
+                                <Map
+                                    style={{ width: 240, height: 200 }}
+                                    interactive={false}
+                                    mapboxAccessToken={
+                                        process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+                                    }
+                                    initialViewState={{
+                                        longitude: (
+                                            data.geolocation as {
+                                                longitude: number;
+                                                latitude: number;
+                                            }
+                                        ).longitude,
+                                        latitude: (
+                                            data.geolocation as {
+                                                longitude: number;
+                                                latitude: number;
+                                            }
+                                        ).latitude,
+                                        zoom: 15
+                                    }}
+                                    mapStyle="mapbox://styles/mapbox/streets-v11"
+                                >
+                                    <GeolocateControl
+                                        positionOptions={{
+                                            enableHighAccuracy: true
+                                        }}
+                                        trackUserLocation={true}
+                                    />
+                                    <Marker
+                                        longitude={
+                                            (
+                                                data.geolocation as {
+                                                    longitude: number;
+                                                    latitude: number;
+                                                }
+                                            ).longitude
+                                        }
+                                        latitude={
+                                            (
+                                                data.geolocation as {
+                                                    longitude: number;
+                                                    latitude: number;
+                                                }
+                                            ).latitude
+                                        }
+                                    />
+                                </Map>
+                            </div>
                         ) : (
                             <>
                                 {data.body && (
