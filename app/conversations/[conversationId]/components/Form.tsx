@@ -1,15 +1,20 @@
 "use client";
 
-import useConversation from "@/app/hooks/useConversation";
 import axios from "axios";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { HiPaperAirplane, HiPhoto, HiFaceSmile } from "react-icons/hi2";
-import MessageInput from "./MessageInput";
 import { CldUploadButton } from "next-cloudinary";
+import React from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { HiMap, HiPaperAirplane, HiPhoto } from "react-icons/hi2";
+
+import useConversation from "@/app/hooks/useConversation";
+
 import EmojiPicker from "./EmojiPicker";
+import MessageInput from "./MessageInput";
+import MapModal from "@/app/components/modals/MapModal";
 
 const Form = () => {
     const { conversationId } = useConversation();
+    const [showMap, setShowMap] = React.useState<boolean>(false);
     const {
         register,
         handleSubmit,
@@ -37,37 +42,51 @@ const Form = () => {
     };
 
     return (
-        <div className="py-4 px-4 bg-white border-t flex items-center gap-2 lg:gap-4 w-full">
-            <CldUploadButton
-                options={{ maxFiles: 1 }}
-                onUpload={handleUpload}
-                uploadPreset="gkx3ul9o"
-            >
-                <HiPhoto size={30} className="text-sky-500" />
-            </CldUploadButton>
-            <EmojiPicker
-                setValue={setValue}
-                getValues={() => getValues("message")}
-            />
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex items-center gap-2 lg:gap-4 w-full"
-            >
-                <MessageInput
-                    id="message"
-                    register={register}
-                    errors={errors}
-                    required
-                    placeholder="Write a message"
-                />
-                <button
-                    type="submit"
-                    className="rounded-full p-2 bg-sky-500 cursor-pointer hover:bg-sky-600 transition"
+        <>
+            <div className="py-4 px-4 bg-white border-t flex items-center gap-2 lg:gap-4 w-full">
+                <CldUploadButton
+                    options={{ maxFiles: 1 }}
+                    onUpload={handleUpload}
+                    uploadPreset="gkx3ul9o"
                 >
-                    <HiPaperAirplane size={18} className="text-white" />
-                </button>
-            </form>
-        </div>
+                    <HiPhoto size={30} className="text-sky-500" />
+                </CldUploadButton>
+                <EmojiPicker
+                    setValue={setValue}
+                    getValues={() => getValues("message")}
+                />
+                <HiMap
+                    className="text-sky-500"
+                    size={30}
+                    onClick={() => setShowMap(!showMap)}
+                />
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex items-center gap-2 lg:gap-4 w-full"
+                >
+                    <MessageInput
+                        id="message"
+                        register={register}
+                        errors={errors}
+                        required
+                        placeholder="Write a message"
+                    />
+                    <button
+                        type="submit"
+                        className="rounded-full p-2 bg-sky-500 cursor-pointer hover:bg-sky-600 transition"
+                    >
+                        <HiPaperAirplane size={18} className="text-white" />
+                    </button>
+                </form>
+            </div>
+
+            {/* Map Modal */}
+            <MapModal
+                isOpen={showMap}
+                onClose={() => setShowMap(false)}
+                view={false}
+            />
+        </>
     );
 };
 
