@@ -67,6 +67,8 @@ model Message {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   body String?
   image String?
+  geolocation Json?
+
   createdAt DateTime @default(now())
 
   seenIds String[] @db.ObjectId
